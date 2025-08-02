@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hypertube_postgres
+    environment:
+      POSTGRES_DB: hypertube
+      POSTGRES_USER: hypertube_user
+      POSTGRES_PASSWORD: hypertube_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hypertube_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: hypertube_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - hypertube_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hypertube_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://hypertube_user:hypertube_password@postgres:5432/hypertube?sslmode=disable
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - ./backend/storage:/app/storage
+    networks:
+      - hypertube_network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hypertube_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - hypertube_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  hypertube_network:
+    driver: bridge
