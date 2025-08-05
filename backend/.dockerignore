@@ -1,0 +1,12 @@
+*.log
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+.env
+.env.local
+.env.production
+vendor/
+.mod
+.sum
