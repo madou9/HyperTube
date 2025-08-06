@@ -12,7 +12,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-echo "🗑️  Stopping and removing everything..."
+echo " Stopping and removing everything..."
 
 # Stop and remove containers, networks, volumes, and images
 docker-compose down -v --rmi all
