@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   postgres:
     image: postgres:15-alpine
@@ -56,13 +55,18 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.vite  # Cache Vite build files
     environment:
-      - VITE_API_URL=http://localhost:8080
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - VITE_HMR_PORT=3000
     depends_on:
       - backend
     networks:
       - hypertube_network
     restart: unless-stopped
+    stdin_open: true  # Keep container interactive
+    tty: true         # Allocate a pseudo-TTY
 
 volumes:
   postgres_data:
