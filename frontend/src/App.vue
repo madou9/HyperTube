@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Navbar from "./components/Navbar.vue";
-import Body from "./components/Body.vue";
 </script>
 
 <template>
-  <Navbar />
-  <Body />
+<router-view></router-view>
 </template>
 
 <style scoped></style>
