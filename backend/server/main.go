@@ -4,42 +4,47 @@ import (
 	"log"
 	"net/http"
 	"os"
-
+	"github.com/madou9/HyperTube/db"
 	"github.com/gin-gonic/gin"
 )
 
+type User struct {
+	ID			int `json:"id" db:"id"`
+	FirstName 	string  `json:"first_name" db:"first_name"`
+	LastName 	string  `json:"last_name" db:"last_name"`
+	Email 		string  `json:"email" db:"email"`
+	Password 	string  `json:"password,omitempty" db:"password_hash"`
+	CreatedAt 	time.time `json:"created_at" db:"created_at"`
+}
+
+type RegisterRequest struct {
+	FirstName 	string  `json:"first_name" db:"first_name"`
+	LastName 	string  `json:"last_name" db:"last_name"`
+	Email 		string  `json:"email" db:"email"`
+	Password 	string  `json:"password,omitempty" db:"password_hash"`
+}
+
+type LoginRequest struct {
+	Email 		string  `json:"email" db:"email"`
+	Password 	string  `json:"password,omitempty" db:"password_hash"`
+}
+type AuthResponse struct {
+	ID			int `json:"id" db:"id"`
+	FirstName 	string  `json:"first_name" db:"first_name"`
+	LastName 	string  `json:"last_name" db:"last_name"`
+	Email 		string  `json:"email" db:"email"`
+	Email 		string  `json:"password,omitempty" db:"password_hash"`
+	CreatedAt 	time.time `json:"created_at" db:"created_at"`
+}
+
 func main() {
-	// Set gin mode
-	gin.SetMode(gin.ReleaseMode)
+	db.InitDb()
+	router := gin.Default()
 
-	// Create router
-	r := gin.Default()
+	router.Get("/users", getAllUser)
+	router.run()
+}
 
-	// Health check endpoint
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "healthy",
-			"service": "hypertube-backend",
-		})
-	})
+func(c *context) getAllUser() {
 
-	// API routes
-	api := r.Group("/api")
-	{
-		api.GET("/status", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "HyperTube API is running",
-				"version": "1.0.0",
-			})
-		})
-	}
-
-	// Get port from environment or default to 8080
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	log.Printf("Server starting on port %s", port)
-	log.Fatal(r.Run(":" + port))
 }
