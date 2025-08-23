@@ -1,4 +1,4 @@
-module hypertube-backend
+module github.com/madou9/HyperTube
 
 go 1.21
 

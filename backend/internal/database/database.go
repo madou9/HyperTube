@@ -2,6 +2,8 @@ package db
 
 import (
 	"os"
+	"database/sql"
+	"log"
 )
 
 func InitDb() {

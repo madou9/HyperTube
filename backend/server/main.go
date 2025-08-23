@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"github.com/madou9/HyperTube/db"
+	"github.com/madou9/HyperTube/internal/database"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ type User struct {
 type RegisterRequest struct {
 	FirstName 	string  `json:"first_name" db:"first_name"`
 	LastName 	string  `json:"last_name" db:"last_name"`
-	Email 		string  `json:"email" db:"email"`
+	Email 		string  `json:"email" db:"email"` 
 	Password 	string  `json:"password,omitempty" db:"password_hash"`
 }
 
